@@ -100,6 +100,7 @@ Ausgabeordner\\
 
 Felix Wohlers
 
+\---
 
 
 Erstellt für schnelles und sicheres Sortieren von Datei-Chaos auf Windows.
