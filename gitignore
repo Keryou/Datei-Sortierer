@@ -1,28 +1,15 @@
 # Windows
 Thumbs.db
 Desktop.ini
-.DS_Store
-*.swp
-*.swo
-*~
 
-# PowerShell
-*.ps1xml
-*.psc1
-*.psd1
-
-# IDE
+# Editor
 .vscode/
 .idea/
-*.sublime-project
-*.sublime-workspace
 
-# Logs
+# Logs / Temp
 *.log
-
-# Temp files
 *.tmp
 *.bak
 
-# OS
-$RECYCLE.BIN/
+# Nur fuer mich, nicht ins Repo
+GITHUB_ANLEITUNG.md

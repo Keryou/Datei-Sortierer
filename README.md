@@ -1,111 +1,97 @@
-# Datei-Sortierer 📁⚡
+# Datei-Sortierer
 
-Ein Windows-Tool zum automatischen Sortieren von Bildern, Videos, Musik, Dokumenten, Anwendungen und ZIP-Dateien nach Datum (Jahr/Monat).
+Ein Windows-Tool mit grafischer Oberfläche, das Bilder, Videos, Musik, Dokumente, Programme (`.exe`) und ZIP-Dateien einsammelt und nach **Jahr** oder **Jahr\Monat** in Ordner sortiert. Läuft mit PowerShell, es muss nichts installiert werden.
 
 ## Features
 
-✨ **Grafische Oberfläche** – Keine Kommandozeile nötig  
-📅 **Mehrere Sortier-Modi** – Nur Jahr, Jahr/Monat oder flach  
-📁 **Unterordner-Verwaltung** – Als Ganzes mitnehmen oder einzelne Dateien sortieren  
-🎬 **Dateitypen** – Bilder, Videos, Musik, Dokumente, .exe, .zip  
-🔍 **Probelauf** – Vor dem echten Sortieren anschauen, was passiert  
-🖼️ **Lichtschwert-Ladebalken** – Weil es cool aussieht  
-✅ **Duplikat-Erkennung** – Gleichnamige Dateien mit gleichem Inhalt werden übersprungen
+- **Grafische Oberfläche** mit Ein- und Ausgabeordner
+- **Ordnerstruktur wählbar:** nur Ausgabeordner (flach), nur Jahr oder Jahr\Monat
+- **Umfang wählbar:** nur Dateien im Hauptordner oder alles inklusive Unterordner
+- **Ordner mitsortieren:** Ordner direkt im Hauptordner werden als Ganzes mitgenommen, ihr Inhalt bleibt unverändert (verschachtelte Ordner werden nicht einzeln angefasst)
+- **Dateitypen einzeln wählbar:** Bilder, Videos, Musik, Dokumente, Anwendungen (`.exe`), ZIP (`.zip`)
+- **Kopieren oder Verschieben**
+- **Duplikat-Erkennung per SHA-256:** Gleicher Name + gleiche Größe + gleicher Inhalt = Duplikat
+- **Duplikate löschen (optional):** Bei *Verschieben* können Duplikate im Eingabeordner in den Papierkorb verschoben werden
+- **Netzwerkpfade:** `\\NAS\Freigabe\Ordner` und Netzlaufwerke funktionieren als Ein- und Ausgabe
+- **Probelauf** (standardmäßig an): zeigt im Protokoll, was passieren würde, ohne etwas zu verändern
+- Lichtschwert-Ladebalken (grün = Probelauf, blau = Kopieren, rot = Verschieben)
 
-## Requirements
+## Voraussetzungen
 
-* **Windows 7 oder neuer**
-* **PowerShell 5.0+** (ist bereits eingebaut)
-* `.NET Framework` (ist bereits eingebaut)
+- Windows 10 oder 11
+- Windows PowerShell 5.1 (ist bereits enthalten)
 
-## Installation
+## Start
 
-1. Beide Dateien in einen Ordner legen:
+1. `sortieren_gui.ps1` und `start_sortierer.bat` in denselben Ordner legen
+2. `start_sortierer.bat` doppelklicken
 
-   * `sortieren\_gui.ps1`
-   * `start\_sortierer.bat`
-2. **`start\_sortierer.bat` doppelklicken** – Das Fenster öffnet sich.
+Alternativ in PowerShell:
 
-Wenn Windows eine Sicherheitswarnung zeigt: "Ausführen" klicken.
-
-**Alternativ (manuell):**
-
-```
-powershell -ExecutionPolicy Bypass -File .\\sortieren\_gui.ps1
+```powershell
+powershell -ExecutionPolicy Bypass -File .\sortieren_gui.ps1
 ```
 
 ## Bedienung
 
-1. **Eingabeordner** wählen (wo die unsortierten Dateien liegen)
-2. **Ausgabeordner** wählen (wo die sortierten Dateien landen sollen)
-3. **Einstellungen** wählen:
+1. Eingabeordner und Ausgabeordner wählen (oder einen Netzwerkpfad eintippen)
+2. Ordnerstruktur, Umfang, Aktion und Dateitypen einstellen
+3. **Zuerst den Probelauf machen** und das Protokoll prüfen
+4. Probelauf-Haken entfernen und **Sortieren starten**
 
-   * Ordnerstruktur (Nur Ausgabeordner / Jahr / Jahr\\Monat)
-   * Welche Dateien (Nur Hauptordner / Alle inkl. Unterordner)
-   * Aktion (Kopieren / Verschieben)
-   * Dateitypen (an- oder abwählbar)
-4. **Probelauf** empfohlen: Erst anschauen, was passiert
-5. **Sortieren starten**
-
-### Beispiel-Struktur nach dem Sortieren
-
-**Ohne "Alle Typen in eigene Ordner trennen":**
+### Beispiel (Jahr\Monat, ohne Typ-Trennung)
 
 ```
-Ausgabeordner\\
-├── 2024\\
-│   ├── 03\\
+Ausgabeordner\
+├── 2024\
+│   ├── 03\
 │   │   ├── urlaub.jpg
-│   │   ├── video.mp4
-│   │   └── musik.mp3
-│   └── 07\\
-│       └── doc.pdf
-├── Anwendungen\\  (immer separat)
-│   └── 2024\\03\\
-│       └── installer.exe
-└── ZIP\\  (immer separat)
-    └── 2024\\08\\
-        └── backup.zip
+│   │   └── song.mp3
+│   └── 07\
+│       └── rechnung.pdf
+├── Anwendungen\
+│   └── 2024\03\setup.exe
+└── ZIP\
+    └── 2024\08\backup.zip
 ```
 
-**Mit "Alle Typen in eigene Ordner trennen":**
+Mit **„Alle Typen in eigene Ordner trennen“** entsteht stattdessen `Bilder\2024\03\`, `Videos\...`, `Musik\...` usw.
+`.exe` und `.zip` landen immer in `Anwendungen\` bzw. `ZIP\`.
 
-```
-Ausgabeordner\\
-├── Bilder\\2024\\03\\urlaub.jpg
-├── Videos\\2024\\07\\video.mp4
-├── Musik\\2024\\03\\musik.mp3
-├── Dokumente\\2024\\07\\doc.pdf
-├── Anwendungen\\2024\\03\\installer.exe
-└── ZIP\\2024\\08\\backup.zip
-```
+## Wie funktioniert die Duplikat-Logik?
 
-## Wichtige Infos
+Liegt am Ziel schon eine Datei mit gleichem Namen und gleicher Größe, werden beide per SHA-256 verglichen:
 
-⚠️ **Probelauf zuerst machen!** – Der ist standardmäßig aktiviert. Da werden keine echten Dateien angefasst.
+- **Gleicher Inhalt:** Die Datei ist ein Duplikat und wird nicht noch einmal kopiert bzw. verschoben. Mehrfaches Ausführen erzeugt also keine Kopien-Flut, und zusammengeführte Backups enthalten jede Datei nur einmal.
+- **Anderer Inhalt:** Die Datei bekommt einen Zähler (`name_1.jpg`, `name_2.jpg`, ...) und geht nicht verloren.
 
-⚠️ **Verschieben hat keine Undo** – Bei Verschieben sind die Originale weg. Nur für Profis.
+Bei Ordnern wird eine Signatur aus allen relativen Dateipfaden und Dateigrößen verglichen. Ordner werden nie automatisch gelöscht.
 
-✅ **Kopieren ist sicher** – Originale bleiben stehen, dafür brauchst du Festplattenspeicher.
+## Duplikate löschen: wichtig zu wissen
 
-🔄 **Duplikat-Logik** – Dateien mit gleichem Namen und gleicher Größe/Inhalt werden übersprungen.
+- Die Option gibt es nur bei **Verschieben** (beim Kopieren sollen die Originale ja bleiben).
+- Gelöscht wird nur, wenn der Inhalt per SHA-256 als identisch bestätigt wurde.
+- Gelöscht wird in den **Papierkorb**. Auf **Netzlaufwerken gibt es keinen Papierkorb**, dort wird endgültig gelöscht.
+- Eingabe- und Ausgabeordner dürfen nicht auf denselben Ort zeigen, auch nicht über verschiedene Namen (z. B. IP-Adresse und Hostname desselben NAS).
+- Im Probelauf wird angezeigt, welche Dateien als Duplikat gelöscht würden.
 
-📁 **Unterordner mit "Unterordner als Ganzes mitnehmen"** – Der Inhalt wird komplett kopiert/verschoben, nicht sortiert. Perfekt für Projekte o. ä.
+## Netzwerkordner
+
+- UNC-Pfade (`\\Server\Freigabe\Ordner`) einfach in das Feld eintippen
+- Netzlaufwerke (z. B. `Z:\`) werden intern in den UNC-Pfad umgewandelt
+- Wenn die Freigabe eine Anmeldung braucht: einmal im Explorer öffnen und anmelden
+- Große Netzwerkordner und das Prüfen von Duplikaten (Hashes) können dauern, vor allem bei großen Dateien
+
+## Hinweise
+
+- Als Datum wird das ältere von Erstell- und Änderungsdatum verwendet (nicht das Aufnahmedatum aus den Foto-Metadaten)
+- Systemordner, Junctions und der Ausgabeordner selbst werden nicht angefasst
+- **Nutzung auf eigene Gefahr.** Erst mit Testdaten und im Probelauf ausprobieren, besonders bei *Verschieben* und *Duplikate löschen*
 
 ## Lizenz
 
-[MIT License](LICENSE)
+MIT, siehe [LICENSE](LICENSE).
 
-## Author
+## Mitmachen
 
-Felix Wohlers
-
-\---
-
-
-Erstellt für schnelles und sicheres Sortieren von Datei-Chaos auf Windows.
-
-\---
-
-**Bugs melden oder Features suggerieren?** – [Issues](../../issues) erstellen.
-
+Bugs und Wünsche gern über den Issues-Tab melden.
