@@ -16,6 +16,8 @@ Ein Windows-Tool mit grafischer Oberfläche, das Bilder, Videos, Musik, Dokument
 - **Probelauf** (standardmäßig an): zeigt im Protokoll, was passieren würde, ohne etwas zu verändern
 - Lichtschwert-Ladebalken (grün = Probelauf, blau = Kopieren, rot = Verschieben)
 
+![Screenshot der Anwendung](screenshot.png)
+
 ## Voraussetzungen
 
 - Windows 10 oder 11
