@@ -7,7 +7,7 @@ Ein Windows-Tool mit grafischer Oberfläche, das Bilder, Videos, Musik, Dokument
 ![Version](https://img.shields.io/badge/Version-1.0.0-blue)
 ![Lizenz](https://img.shields.io/badge/Lizenz-MIT-green)
 
-![Screenshot des Datei-Sortierers](docs/screenshot.png)
+![Screenshot der Anwendung](screenshot.png)
 
 ## ✨ Features
 
